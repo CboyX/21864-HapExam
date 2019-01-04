@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hbi.core.mapper.OrgCompanysMapper">
+    <resultMap id="BaseResultMap" type="hbi.core.dto.OrgCompanys">
+        <result column="COMPANY_ID" property="companyId" jdbcType="DECIMAL" />
+        <result column="COMPANY_NUMBER" property="companyNumber" jdbcType="VARCHAR" />
+        <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR" />
+        <result column="ENABLED_FLAG" property="enabledFlag" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!--resultMap 是返回dto的必须项-->
+    <select id="selectLov" resultMap="BaseResultMap" parameterType="hbi.core.dto.OrgCompanys">
+        select * from HAP_ORG_COMPANYS
+        <where>
+            <if test="companyName!=null">
+                company_name like #{companyName}
+            </if>
+            <if test="companyNumber!=null">
+                and COMPANY_NUMBER like #{companyNumber}
+            </if>
+        </where>
+    </select>
+
+</mapper>

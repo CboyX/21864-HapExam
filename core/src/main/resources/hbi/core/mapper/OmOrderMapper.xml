@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hbi.core.mapper.OmOrderMapper">
+    <resultMap id="BaseResultMap" type="hbi.core.dto.OmOrder">
+        <!--类型有问题-->
+        <result column="HEADER_ID" property="headerId"  jdbcType="DECIMAL"/>
+        <result column="ORDER_NUMBER" property="orderNumber"  jdbcType="VARCHAR"/>
+        <result column="COMPANY_ID" property="companyId"  jdbcType="DECIMAL"/>
+        <result column="ORDER_DATE" property="orderDate"  jdbcType="VARCHAR"/>
+        <result column="ORDER_STATUS" property="orderStatus"  jdbcType="VARCHAR"/>
+        <result column="CUSTOMER_ID" property="customerId"  jdbcType="DECIMAL"/>
+        <result column="COMPANY_NAME" property="companyName" jdbcType="VARCHAR"/>
+        <result column="CUSTOMER_NAME" property="customerName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--子查询返回多行用in.-->
+    <select id="selectOnCondition" resultMap="BaseResultMap" parameterType="hbi.core.dto.OmOrder">
+        select DISTINCT hap_om_order_headers.*,hap_org_companys.company_name,hap_ar_customers.customer_name
+        from hap_org_companys inner join hap_om_order_headers inner join hap_ar_customers
+        <if test="itemCode!=null">
+            inner join HAP_OM_ORDER_LINES inner join HAP_INV_INVENTORY_ITEMS
+        </if>
+        ON hap_org_companys.company_id=hap_om_order_headers.company_id
+        and hap_om_order_headers.customer_id=hap_ar_customers.customer_id
+        <if test="itemCode!=null" >
+            and HAP_OM_ORDER_LINES.header_id=HAP_OM_ORDER_HEADERS.header_id
+            and HAP_OM_ORDER_LINES.inventory_item_id=HAP_INV_INVENTORY_ITEMS.inventory_item_id
+        </if>
+        <where>
+            <if test="companyName!=null">  hap_org_companys.company_name like #{companyName}</if>
+            <if test="customerName!=null">and hap_ar_customers.customer_name like #{customerName}</if>
+            <if test="orderNumber!=null">and hap_om_order_headers.order_number like #{orderNumber}</if>
+            <if test="orderStatus!=null" >and hap_om_order_headers.order_status like #{orderStatus}</if>
+            <if test="itemCode!=null">and HAP_INV_INVENTORY_ITEMS.item_code like #{itemCode} </if>
+            <if test="headerId!=0 and headerId!=null"> and hap_om_order_headers.header_id like #{headerId}</if>
+        </where>
+         ORDER BY hap_om_order_headers.order_number
+    </select>
+
+</mapper>
