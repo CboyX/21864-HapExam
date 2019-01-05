@@ -25,6 +25,6 @@ public class OmLinesSerivceImpl extends BaseServiceImpl<OmLines> implements IOmL
             for (OmLines item : list) {
             item.setBill(item.getUnitSellingPrice() * item.getOrderdQuantity());
         }
-        return list;
+        return list;//test
     }
 }

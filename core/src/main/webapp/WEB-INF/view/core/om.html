@@ -58,7 +58,7 @@
                         <label class="col-sm-3 control-label"><@spring.message "hap.omordernumber"/></label>
                         <div class="col-sm-9">
                             <input id="orderNumberInput" class="k-textbox" data-bind="value:model.orderNumber"
-                                   style="width: 100%">
+                                   style="width: 100%" pattern="^[0-9a-zA-Z]{1,10}$" validationMessage='<@spring.message "hap.validation.numberletter10"/>'>
                         </div>
                     </div>
                 </div>
